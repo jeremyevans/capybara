@@ -56,4 +56,4 @@ Capybara::SpecHelper.spec '#not_match_selector?' do
       expect(@element).to not_match_selector(:css, "span.number", :text => "Doesnotexist")
     end
   end
-end
+end if Gem::Version.new(RSpec::Expectations::Version::STRING) >= Gem::Version.new('3.1')

@@ -1,7 +1,7 @@
 module Capybara
   module RSpecMatchers
     class Matcher
-      include ::RSpec::Matchers::Composable if defined?(::RSpec::Expectations::Version) && RSpec::Expectations::Version::STRING.to_f >= 3.0
+      include ::RSpec::Matchers::Composable if defined?(::RSpec::Expectations::Version) && (Gem::Version.new(RSpec::Expectations::Version::STRING) >= Gem::Version.new('3.0'))
 
       def wrap(actual)
         if actual.respond_to?("has_selector?")
@@ -227,7 +227,9 @@ module Capybara
     def match_selector(*args)
       MatchSelector.new(*args)
     end
-    ::RSpec::Matchers.define_negated_matcher :not_match_selector, :match_selector if defined? ::RSpec::Matchers
+    # defined_negated_matcher was added in RSpec 3.1 - it's syntactic sugar only since a user can do
+    # expect(page).not_to match_selector, so not sure we really need to support not_match_selector for prior to RSpec 3.1
+    ::RSpec::Matchers.define_negated_matcher :not_match_selector, :match_selector if defined?(::RSpec::Expectations::Version) && (Gem::Version.new(RSpec::Expectations::Version::STRING) >= Gem::Version.new('3.1'))
 
 
     def have_xpath(xpath, options={})
