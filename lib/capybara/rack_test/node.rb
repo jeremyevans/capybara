@@ -123,14 +123,11 @@ class Capybara::RackTest::Node < Capybara::Driver::Node
     alias_method "unchecked_#{meth_name}", meth_name
     private "unchecked_#{meth_name}" # rubocop:disable Style/AccessModifierDeclarations
 
-    define_method meth_name do |*args, **kw|
+    define_method meth_name do |*args|
       stale_check
-      if kw.empty?
-        send("unchecked_#{meth_name}", *args)
-      else
-        send("unchecked_#{meth_name}", *args, **kw)
-      end
+      send("unchecked_#{meth_name}", *args)
     end
+    ruby2_keywords(meth_name) if respond_to?(:ruby2_keywords, true)
   end
 
   def ==(other)

@@ -51,6 +51,7 @@ module Capybara
         page.send method, *args, &block
       end
     end
+    ruby2_keywords(*Session::DSL_METHODS) if respond_to?(:ruby2_keywords, true)
   end
 
   extend(Capybara::DSL)

@@ -744,25 +744,19 @@ module Capybara
     end
 
     NODE_METHODS.each do |method|
-      define_method method do |*args, **kw, &block|
+      define_method method do |*args, &block|
         @touched = true
-        if kw.empty?
-          current_scope.send(method, *args, &block)
-        else
-          current_scope.send(method, *args, **kw, &block)
-        end
+        current_scope.send(method, *args, &block)
       end
     end
+    ruby2_keywords(*NODE_METHODS) if respond_to?(:ruby2_keywords, true)
 
     DOCUMENT_METHODS.each do |method|
-      define_method method do |*args, **kw, &block|
-        if kw.empty?
-          document.send(method, *args, &block)
-        else
-          document.send(method, *args, **kw, &block)
-        end
+      define_method method do |*args, &block|
+        document.send(method, *args, &block)
       end
     end
+    ruby2_keywords(*DOCUMENT_METHODS) if respond_to?(:ruby2_keywords, true)
 
     def inspect
       %(#<Capybara::Session>)
